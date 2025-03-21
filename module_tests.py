@@ -1,5 +1,5 @@
 import tests
-import submit
+from . import submit
 import torch as t
 
 
