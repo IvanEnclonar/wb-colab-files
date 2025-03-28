@@ -2,69 +2,64 @@ import tests
 from . import submit
 import torch as t
 
+mid = 8
+eid = 1
 
 def tester():
-    print("Test connection")
+    print("Test connection for module tests 8.1")
 
-def test1(attn_patterns_from_shorthand: t.Tensor, attn_patterns_from_full_name: t.Tensor):
-    t.testing.assert_close(attn_patterns_from_shorthand, attn_patterns_from_full_name)
-    submit.test_submit(1, mid=6, eid=1)
-    print("All tests in `test1` passed!")
+def test1(ToyModel):
+    tests.test_model(ToyModel)
+    submit.test_submit(1, mid=mid, eid=eid)
 
+def test2(ToyModel):
+    tests.test_generate_batch(ToyModel)
+    submit.test_submit(2, mid=mid, eid=eid)
 
-def test2(layer0_pattern_from_cache, layer0_pattern_from_q_and_k):
-    t.testing.assert_close(layer0_pattern_from_cache, layer0_pattern_from_q_and_k)
-    submit.test_submit(2, mid=6, eid=1)
-    print("All tests in `test1` passed!")
+def test3(ToyModel):
+    tests.test_calculate_loss(ToyModel)
+    submit.test_submit(3, mid=mid, eid=eid)
 
-def test3(logit_attr, correct_token_logits): 
+def test4(ToySAE):
+    tests.test_sae_init(ToySAE)
+    submit.test_submit(4, mid=mid, eid=eid)
 
-    t.testing.assert_close(logit_attr.sum(1), correct_token_logits, atol=1e-3, rtol=0)
-    submit.test_submit(3, mid=6, eid=1)
-    print("All tests in `test3` passed!")
+def test5(ToySAE):
+    tests.test_sae_W_dec_normalized(ToySAE)
+    submit.test_submit(5, mid=mid, eid=eid)
 
-def test4(ablation_scores, model, rep_tokens):
-    tests.test_get_ablation_scores(ablation_scores, model, rep_tokens)
-    submit.test_submit(4, mid=6, eid=1)
+def test6(ToySAE):
+    tests.test_sae_generate_batch(ToySAE)
+    submit.test_submit(6, mid=mid, eid=eid)
 
-def test5(AB_unfactored, AB):
+def test7(ToySAE):
+    tests.test_sae_forward(ToySAE)
+    submit.test_submit(7, mid=mid, eid=eid)
 
-    t.testing.assert_close(AB_unfactored, AB)
-    submit.test_submit(5, mid=6, eid=1)
-    print("All tests in `test5` passed!")
+def test8(ToySAE):
+    tests.test_resample_simple(ToySAE) 
+    submit.test_submit(8, mid=mid, eid=eid)
 
-def test6(full_OV_circuit, model, layer, head_index):
+def test9(ToySAE):
+    tests.test_resample_advanced(ToySAE)
+    submit.test_submit(9, mid=mid, eid=eid)
 
-    tests.test_full_OV_circuit(full_OV_circuit, model, layer, head_index)
-    submit.test_submit(6, mid=6, eid=1)
+def test10(output, input):
+    t.testing.assert_close(output, t.tensor(9.0))
+    t.testing.assert_close(input.grad, t.tensor(6.0))
+    print("All tests passed!")
+    submit.test_submit(10, mid=mid, eid=eid)
 
-def test7(decomposed_qk_input, decomposed_q, decomposed_k, rep_cache, ind_head_index):
+def test11(output, theta, z):
+    t.testing.assert_close(output, t.tensor([[0.0, 0.0, 1.6, 2.0]]))  # expect J(θ,z,ε) = z * 1[z > θ]
+    t.testing.assert_close(theta.grad, t.tensor([0.0, -3.0, -3.0, 0.0]))  # expect dJ/dθ = -θ/ε * K((z-θ)/ε)
+    t.testing.assert_close(z.grad, t.tensor([[0.0, 0.0, 1.0, 1.0]]))  # expect dJ/dz = 1[z > θ]
 
-    t.testing.assert_close(
-    decomposed_qk_input.sum(0), rep_cache["resid_pre", 1] + rep_cache["pos_embed"], rtol=0.01, atol=1e-05
-)
-    t.testing.assert_close(decomposed_q.sum(0), rep_cache["q", 1][:, ind_head_index], rtol=0.01, atol=0.001)
-    t.testing.assert_close(decomposed_k.sum(0), rep_cache["k", 1][:, ind_head_index], rtol=0.01, atol=0.01)
-    print("All tests in `test7` passed!")
-    submit.test_submit(7, mid=6, eid=1)
+    print("All tests for `JumpReLU` passed!")
+    submit.test_submit(11, mid=mid, eid=eid)
 
-def test8(decompose_attn_scores, decomposed_q, decomposed_k, model):
-    tests.test_decompose_attn_scores(decompose_attn_scores, decomposed_q, decomposed_k, model)
-    submit.test_submit(8, mid=6, eid=1)
+def test12(logits_without_sae_recon, logits_no_saes):
+    t.testing.assert_close(logits_no_saes, logits_without_sae_recon)
+    print("All tests passed!")
 
-def test9(find_K_comp_full_circuit, model):
-    tests.test_find_K_comp_full_circuit(find_K_comp_full_circuit, model)
-    submit.test_submit(9, mid=6, eid=1)
-
-def test10(get_comp_score):
-    tests.test_get_comp_score(get_comp_score)
-    submit.test_submit(10, mid=6, eid=1)
-
-def test11(composition_scores_batched, composition_scores):
-
-    t.testing.assert_close(composition_scores_batched["Q"], composition_scores["Q"])
-    t.testing.assert_close(composition_scores_batched["K"], composition_scores["K"])
-    t.testing.assert_close(composition_scores_batched["V"], composition_scores["V"])
-
-    submit.test_submit(11, mid=6, eid=1)
-    print("All tests in `test11` passed!")
+    submit.test_submit(12, mid=mid, eid=eid)
