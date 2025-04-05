@@ -1,4 +1,4 @@
-import tests
+import part2_intro_to_mech_interp.tests as tests
 from . import submit
 import torch as t
 
