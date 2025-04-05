@@ -1,4 +1,4 @@
-import tests
+import part31_superposition_and_saes.tests as tests
 from . import submit
 import torch as t
 
