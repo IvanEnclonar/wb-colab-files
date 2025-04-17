@@ -13,7 +13,7 @@ eid = 1
 
 def tester():
     required_tests = [
-        "test_compute_advantage",
+        "test_compute_advantages",
         "test_calc_kl_penalty",
         "test_calc_kl_penalty_stability",
         "test_calc_entropy_bonus",
@@ -73,7 +73,7 @@ def test3(normalize_reward):
     submit.test_submit(3, mid=mid, eid=eid, test_result=True)
 
 def test4(compute_advantages):
-    tests.test_compute_advantage(compute_advantages)
+    tests.test_compute_advantages(compute_advantages)
     print("All tests for `compute_advantages` passed!")
     submit.test_submit(4, mid=mid, eid=eid, test_result=True)
 
