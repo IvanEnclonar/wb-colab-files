@@ -17,9 +17,15 @@ def test2(layer0_pattern_from_cache, layer0_pattern_from_q_and_k):
     submit.test_submit(2, mid=6, eid=1)
     print("All tests in `test1` passed!")
 
-def test3(logit_attr, correct_token_logits): 
-
-    t.testing.assert_close(logit_attr.sum(1), correct_token_logits, atol=1e-3, rtol=0)
+def test3(logit_attr, correct_token_logits, atol=None, rtol=None): 
+    if atol is None and rtol is None:
+        #this is for those who updated their test 3
+        t.testing.assert_close(logit_attr.sum(1), correct_token_logits, atol=1e-3, rtol=0)
+    else:
+        #this is for those who did not update their test 3
+        t.testing.assert_close(logit_attr, correct_token_logits, atol=atol, rtol=rtol)
+    
+    
     submit.test_submit(3, mid=6, eid=1)
     print("All tests in `test3` passed!")
 
