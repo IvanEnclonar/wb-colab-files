@@ -12,10 +12,24 @@ mid = 9
 eid = 1
 
 def tester():
-    if hasattr(tests, "test_compute_advantage") and hasattr(tests, "test_calc_kl_penalty") and hasattr(tests, "test_calc_kl_penalty_stability") and hasattr(tests, "test_calc_entropy_bonus") and hasattr(tests, "test_get_logprobs"):
-        print("All tests are available.")
+    required_tests = [
+        "test_compute_advantage",
+        "test_calc_kl_penalty",
+        "test_calc_kl_penalty_stability",
+        "test_calc_entropy_bonus",
+        "test_calc_entropy_bonus_stability",
+        "test_get_logprobs"
+    ]
+    
+    missing_tests = []
+    for test in required_tests:
+        if not hasattr(tests, test):
+            missing_tests.append(test)
+    
+    if missing_tests:
+        print("Missing tests:", ", ".join(missing_tests))
     else:
-        print("Some tests are missing.")
+        print("All tests are available.")
 
 
 def test1(model, HookedTransformer, device):
